@@ -1,0 +1,8 @@
+1. create json file to save user data - DONE
+2. allow users to save their valorant username
+3. scrape more data
+    - comp/unrated
+    - overview data
+    - top agents
+    - top maps
+    - recent matches
