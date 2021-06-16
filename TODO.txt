@@ -1,8 +1,19 @@
 1. create json file to save user data - DONE
-2. allow users to save their valorant username
+2. allow users to save their valorant username - DONE
 3. scrape more data
     - comp/unrated
     - overview data
     - top agents
     - top maps
     - recent matches
+    - rank
+
+4. create match object - DONE
+    - result
+    - agent
+    - score
+    - kda
+    - ADR
+    - HS %
+
+5. add images

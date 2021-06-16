@@ -9,7 +9,8 @@ def load():
 def add(userID, valID):
     with open(fileName, "r+") as file:
         data = json.load(file)
-        data[str(userID)] = {"valorantTag": valID}
+        if userID in data: return False
+        data[userID] = {"valorantTag": valID}
         file.seek(0)
         json.dump(data, file, indent=4)
     return True
