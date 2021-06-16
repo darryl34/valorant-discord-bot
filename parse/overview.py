@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup as bs4
 from parse.match import Match
 
 prefix = "https://api.tracker.gg/api/v2/valorant/standard/matches/riot/"
-suffix = "?type=unrated"
+unratedSuffix = "?type=unrated"
+compSuffix = "?type=competitive"
 
 headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'}
@@ -29,8 +30,15 @@ def getTopWeapons(valTag):
         result.append([weaponName, accuracy, kills])
     return result
 
-def getRecentMatch(valTag):
-    URL = prefix + valTag + suffix
+def getRecentUnrated(valTag):
+    URL = prefix + valTag + unratedSuffix
+    page = requests.get(URL, headers=headers).json()
+    data = page["data"]
+    recent = data["matches"][0]
+    return parseMatch(recent)
+
+def getRecentComp(valTag):
+    URL = prefix + valTag + compSuffix
     page = requests.get(URL, headers=headers).json()
     data = page["data"]
     recent = data["matches"][0]
