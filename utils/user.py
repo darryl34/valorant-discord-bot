@@ -1,6 +1,7 @@
+import os
 import json
 
-fileName = "C:/Users/Darryl/Documents/Python Projects/Valorant Discord Bot/utils/userData.json"
+fileName = os.path.abspath("utils/userData.json")
 
 def load():
     with open(fileName) as data:

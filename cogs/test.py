@@ -27,6 +27,7 @@ class test(commands.Cog):
 
     @commands.command()
     async def top(self, ctx, discordUser: discord.Member=None):
+        """ Displays your top weapons """
         discordUser = discordUser or ctx.author
         valTag = user.getValTag(str(discordUser.id))
         if valTag is None:
@@ -42,15 +43,42 @@ class test(commands.Cog):
             await ctx.send(embed=embed)
 
 
-    @commands.command()
-    async def recent(self, ctx, discordUser: discord.Member=None):
+    @commands.command(aliases=['lu'])
+    async def lastUnrated(self, ctx, discordUser: discord.Member=None):
+        """ Gets data about your most recent unrated match """
         discordUser = discordUser or ctx.author
         valTag = user.getValTag(str(discordUser.id))
         if valTag is None:
             await ctx.send("User is not registered yet!")
         else:
             displayMessage = ""
-            match = overview.getRecentMatch(valTag)
+            match = overview.getRecentUnrated(valTag)
+            if match.getResult():
+                displayMessage = "Match Won!"
+            else:
+                displayMessage = "Match Lost!"
+
+            embed = discord.Embed(description=displayMessage)
+            embed.set_author(name=discordUser, icon_url=discordUser.avatar_url)
+            embed.add_field(name="Map", value=match.getMap(), inline=True)
+            embed.add_field(name="Agent Played", value=match.getAgent(), inline=True)
+            embed.add_field(name="Score", value=match.getScore(), inline=True)
+            embed.add_field(name="K/D/A", value=match.getKDA(), inline=True)
+            embed.add_field(name="Avg. Damage", value=match.getADR(), inline=True)
+            embed.add_field(name="Headshot %", value=match.getHS(), inline=True)
+            embed.set_footer(text=discordUser.nick + "'s most recent match")
+            await ctx.send(embed=embed)
+
+    @commands.command(aliases=['lc'])
+    async def lastComp(self, ctx, discordUser: discord.Member=None):
+        """ Gets data about your most recent competitive match """
+        discordUser = discordUser or ctx.author
+        valTag = user.getValTag(str(discordUser.id))
+        if valTag is None:
+            await ctx.send("User is not registered yet!")
+        else:
+            displayMessage = ""
+            match = overview.getRecentComp(valTag)
             if match.getResult():
                 displayMessage = "Match Won!"
             else:

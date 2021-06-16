@@ -28,7 +28,7 @@ class Match:
         return self.matchStats["ADR"]
 
     def setADR(self, adr):
-        self.matchStats["ADR"] = adr
+        self.matchStats["ADR"] = round(adr)
 
     def getHS(self):
         return str(self.matchStats["HS"]) + "%"

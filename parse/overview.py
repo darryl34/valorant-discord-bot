@@ -52,7 +52,6 @@ def parseMatch(jsonData):
     stats = jsonData["segments"][0]["stats"]
     score = [stats['roundsWon']["value"], stats['roundsLost']["value"]]
     match = Match(matchWin, score, agent, map)
-    print(stats["kills"]["value"])
     match.setKDA(stats["kills"]["value"], stats["deaths"]["value"], stats["assists"]["value"])
     match.setADR(stats["damagePerRound"]["value"])
     match.setHS(stats["headshotsPercentage"]["displayValue"])
