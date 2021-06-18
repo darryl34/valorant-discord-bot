@@ -19,7 +19,6 @@ def getTopWeapons(valTag):
 
     result = []
     topWeapons = results.find_all('div', class_='weapon')
-    print(topWeapons)
     for weapon in topWeapons:
         weaponName = weapon.find('div', class_='weapon__name').text
         accuracy = weapon.find('div', class_='weapon__accuracy-hits').text

@@ -15,11 +15,17 @@ class test(commands.Cog):
         await ctx.send(f"Hello {ctx.author.nick}")
 
     @commands.command()
+    async def ping(self, ctx):
+        """ Replies to you if online """
+        await ctx.send("Pong! If a command doesn't work, it's probably broken :)")
+
+    @commands.command()
     async def register(self, ctx, valID):
-        """ Associates a user with their Valorant ID
+        """
             Usage: `register user#1234
         """
-        formatted = valID.replace("#", "%23")
+        noSpaces = valID.replace(" ", "")
+        formatted = noSpaces.replace("#", "%23")
         if user.add(str(ctx.author.id), formatted):
             await ctx.send("Registered successfully!")
         else:
