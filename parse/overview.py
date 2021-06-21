@@ -57,5 +57,15 @@ def parseMatch(jsonData):
 
     return match
 
+def getRank(valTag):
+    URL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/overview?playlist=competitive"
+    page = requests.get(URL, headers=headers)
+
+    soup = bs4(page.content, 'html.parser')
+    results = soup.find(id="app")
+
+    rankDiv = results.find('span', class_='valorant-highlighted-stat__value').text
+    return rankDiv
+
 if __name__ == "__main__":
-    getTopWeapons("darryl%237534")
+    getRank("darryl%237534")

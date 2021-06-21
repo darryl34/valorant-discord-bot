@@ -31,6 +31,7 @@ class command(commands.Cog):
         else:
             await ctx.send("User already registered!")
 
+
     @commands.command()
     async def top(self, ctx, discordUser: discord.Member=None):
         """ Displays your top weapons """
@@ -48,6 +49,16 @@ class command(commands.Cog):
             embed.set_footer(text="All stats calculated from Unrated matches")
             await ctx.send(embed=embed)
 
+
+    @commands.command()
+    async def rank(self, ctx, discordUser: discord.Member=None):
+        """ Kinda self-explanatory tbh """
+        discordUser = discordUser or ctx.author
+        valTag = user.getValTag(str(discordUser.id))
+        if valTag is None:
+            await ctx.send("User is not registered yet!")
+        else:
+            await ctx.send("You are " + overview.getRank(valTag))
 
     @commands.command(aliases=['lu'])
     async def lastUnrated(self, ctx, discordUser: discord.Member=None):
