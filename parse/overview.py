@@ -54,8 +54,30 @@ def parseMatch(jsonData):
     match.setKDA(stats["kills"]["value"], stats["deaths"]["value"], stats["assists"]["value"])
     match.setADR(stats["damagePerRound"]["value"])
     match.setHS(stats["headshotsPercentage"]["displayValue"])
-
     return match
 
+def getFiveUnrated(valTag):
+    URL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/overview?playlist=unrated"
+    page = requests.get(URL, headers=headers)
+
+    soup = bs4(page.content, 'html.parser')
+    results = soup.find(id="app")
+
+    result = []
+    recentFive = results.find_all('span', class_='timeline-match__score')
+    for matches in recentFive[:5]:
+        f_score = matches.find('span', class_='timeline-match__score--winner').text
+        s_score = matches.find('span', class_='timeline-match__score--loser').text
+
+        if f_score > s_score:
+            status = "W"
+        elif f_score == s_score:
+            status = "D"
+        else:
+            status = "L"
+
+        result.append(status)
+    return result
+
 if __name__ == "__main__":
-    getTopWeapons("darryl%237534")
+    print(getFiveUnrated("darryl%237534"))
