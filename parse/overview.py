@@ -1,5 +1,9 @@
+import os
 import requests
+import time
 from bs4 import BeautifulSoup as bs4
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from parse.match import Match
 
 prefix = "https://api.tracker.gg/api/v2/valorant/standard/matches/riot/"
@@ -67,5 +71,32 @@ def getRank(valTag):
     rankDiv = results.find('span', class_='valorant-highlighted-stat__value').text
     return rankDiv
 
+def getTeammates(valTag):
+    URL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/matches?playlist=unrated"
+    options = Options()
+    options.headless = True
+    driver = webdriver.Chrome(options=options, executable_path=os.path.abspath("parse/chromedriver.exe"))
+    # Only use when running this file
+    # driver = webdriver.Chrome(os.path.abspath("chromedriver.exe"))
+    driver.get(URL)
+    time.sleep(4)   # Give website time to load data
+
+    soup = bs4(driver.page_source, 'html.parser')
+    results = soup.find(id="app")
+
+    friends = results.find_all('div', class_='acquaintances__list-player')
+
+    result = []
+    for friend in friends:
+        nameDiv = friend.find('div', class_='name')
+        name = nameDiv.find('a').text
+        matches = friend.find('div', class_='matches').text
+
+        winrateDiv = friend.find('div', class_='stat stat--right')
+        winrate = winrateDiv.find_all('div')[1].text
+        result.append([name, matches, winrate])
+
+    return result
+
 if __name__ == "__main__":
-    getRank("darryl%237534")
+    getTeammates("darryl%237534")

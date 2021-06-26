@@ -112,5 +112,25 @@ class command(commands.Cog):
             embed.set_footer(text=discordUser.nick + "'s most recent match")
             await ctx.send(embed=embed)
 
+
+    @commands.command()
+    async def friends(self, ctx, discordUser: discord.Member=None):
+        """ Displays list of most played with people """
+        discordUser = discordUser or ctx.author
+        valTag = user.getValTag(str(discordUser.id))
+        if valTag is None:
+            await ctx.send("User is not registered yet!")
+        else:
+            result = overview.getTeammates(valTag)
+
+            embed = discord.Embed(title="Most played with")
+            embed.set_author(name=discordUser, icon_url=discordUser.avatar_url)
+            for elem in result:
+                embed.add_field(name=elem[0], value=str(elem[1]) + " Win Rate: " + str(elem[2]),
+                                inline=False)
+            embed.set_footer(text="All stats calculated from Unrated matches")
+            await ctx.send(embed=embed)
+
+
 def setup(bot):
     bot.add_cog(command(bot))
