@@ -131,6 +131,19 @@ class command(commands.Cog):
             embed.set_footer(text="All stats calculated from Unrated matches")
             await ctx.send(embed=embed)
 
+    @commands.command()
+    async def recentFive(self, ctx, discordUser: discord.Member=None):
+        """ Displays list of most played with people """
+        discordUser = discordUser or ctx.author
+        valTag = user.getValTag(str(discordUser.id))
+        if valTag is None:
+            await ctx.send("User is not registered yet!")
+        else:
+            result = overview.getFiveUnrated(valTag)
+            embed = discord.Embed(title="Recent Five Unrated: ")
+            embed.add_field(name=result)
+            embed.set_footer(text="All stats calculated from Unrated matches")
+            await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(command(bot))

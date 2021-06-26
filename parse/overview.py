@@ -105,9 +105,9 @@ def getFiveUnrated(valTag):
     options.headless = True
     #driver = webdriver.Chrome(options=options, executable_path=os.path.abspath("parse/chromedriver.exe"))
     # Only use when running this file
-    driver = webdriver.Chrome(os.path.abspath("chromedriver.exe"))
+    driver = webdriver.Chrome(os.path.abspath("chromedriver"))
     driver.get(URL)
-    time.sleep(4)  # Give website time to load data
+    time.sleep(1)  # Give website time to load data
 
     soup = bs4(driver.page_source, 'html.parser')
     results = soup.find(id="app")
@@ -119,14 +119,16 @@ def getFiveUnrated(valTag):
         s_score = matches.find('span', class_='timeline-match__score--loser').text
 
         if f_score > s_score:
-            status = "W"
+            status = "W "
         elif f_score == s_score:
-            status = "D"
+            status = "D "
         else:
-            status = "L"
+            status = "L "
 
         result.append(status)
-    return result
+
+    fiveH = "".join(result)
+    return fiveH
 
 if __name__ == "__main__":
     getFiveUnrated("darryl%237534")
