@@ -131,17 +131,18 @@ class command(commands.Cog):
             embed.set_footer(text="All stats calculated from Unrated matches")
             await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(aliases=['r5'])
     async def recentFive(self, ctx, discordUser: discord.Member=None):
-        """ Displays list of most played with people """
+        """ Displays last five games win streak """
         discordUser = discordUser or ctx.author
         valTag = user.getValTag(str(discordUser.id))
         if valTag is None:
             await ctx.send("User is not registered yet!")
         else:
             result = overview.getFiveUnrated(valTag)
-            embed = discord.Embed(title="Recent Five Unrated: ")
-            embed.add_field(name=result)
+            embed = discord.Embed(description="Win Streak")
+            embed.set_author(name=discordUser, icon_url=discordUser.avatar_url)
+            embed.add_field(name="Last 5:", value=str(result))
             embed.set_footer(text="All stats calculated from Unrated matches")
             await ctx.send(embed=embed)
 

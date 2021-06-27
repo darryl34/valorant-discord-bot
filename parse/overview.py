@@ -103,9 +103,9 @@ def getFiveUnrated(valTag):
     page = requests.get(URL, headers=headers)
     options = Options()
     options.headless = True
-    #driver = webdriver.Chrome(options=options, executable_path=os.path.abspath("parse/chromedriver.exe"))
+    driver = webdriver.Chrome(options=options, executable_path=os.path.abspath("parse/chromedriver.exe"))
     # Only use when running this file
-    driver = webdriver.Chrome(os.path.abspath("chromedriver"))
+    # driver = webdriver.Chrome(os.path.abspath("chromedriver"))
     driver.get(URL)
     time.sleep(1)  # Give website time to load data
 

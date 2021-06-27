@@ -17,4 +17,4 @@
     - HS %
 
 5. add images
-6. win lose streak
+6. win lose streak - DONE
