@@ -132,7 +132,7 @@ class command(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command(aliases=['r5u'])
-    async def recentFiveUnrated(self, ctx, discordUser: discord.Member=None):
+    async def recent5u(self, ctx, discordUser: discord.Member=None):
         """ Displays last five games win streak """
         discordUser = discordUser or ctx.author
         valTag = user.getValTag(str(discordUser.id))
@@ -147,7 +147,7 @@ class command(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command(aliases=['r5c'])
-    async def recentFiveCompetitive(self, ctx, discordUser: discord.Member=None):
+    async def recent5c(self, ctx, discordUser: discord.Member=None):
         """ Displays last five games win streak """
         discordUser = discordUser or ctx.author
         valTag = user.getValTag(str(discordUser.id))
