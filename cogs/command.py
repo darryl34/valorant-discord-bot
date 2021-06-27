@@ -131,6 +131,24 @@ class command(commands.Cog):
             embed.set_footer(text="All stats calculated from Unrated matches")
             await ctx.send(embed=embed)
 
+    @commands.command(aliases=['cf'])
+    async def compfriends(self, ctx, discordUser: discord.Member=None):
+        """ Displays list of most played with people """
+        discordUser = discordUser or ctx.author
+        valTag = user.getValTag(str(discordUser.id))
+        if valTag is None:
+            await ctx.send("User is not registered yet!")
+        else:
+            result = overview.getTeammates(valTag, True)
+
+            embed = discord.Embed(title="Most played with")
+            embed.set_author(name=discordUser, icon_url=discordUser.avatar_url)
+            for elem in result:
+                embed.add_field(name=elem[0], value=str(elem[1]) + " Win Rate: " + str(elem[2]),
+                                inline=False)
+            embed.set_footer(text="All stats calculated from Competitive matches")
+            await ctx.send(embed=embed)
+
     @commands.command(aliases=['r5'])
     async def recentFive(self, ctx, discordUser: discord.Member=None):
         """ Displays last five games win streak """
@@ -142,7 +160,7 @@ class command(commands.Cog):
             result = overview.getFiveUnrated(valTag)
             embed = discord.Embed(description="Win Streak")
             embed.set_author(name=discordUser, icon_url=discordUser.avatar_url)
-            embed.add_field(name="Last 5:", value=str(result))
+            embed.add_field(name="Last 5:", value=result)
             embed.set_footer(text="All stats calculated from Unrated matches")
             await ctx.send(embed=embed)
 

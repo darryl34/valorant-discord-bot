@@ -71,15 +71,19 @@ def getRank(valTag):
     rankDiv = results.find('span', class_='valorant-highlighted-stat__value').text
     return rankDiv
 
-def getTeammates(valTag):
-    URL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/matches?playlist=unrated"
+def getTeammates(valTag, isComp=False):
+    unratedURL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/matches?playlist=unrated"
+    compURL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/matches?playlist=competitive"
     options = Options()
     options.headless = True
     driver = webdriver.Chrome(options=options, executable_path=os.path.abspath("parse/chromedriver.exe"))
     # Only use when running this file
     # driver = webdriver.Chrome(os.path.abspath("chromedriver.exe"))
-    driver.get(URL)
-    time.sleep(4)   # Give website time to load data
+    if isComp:
+        driver.get(compURL)
+    else:
+        driver.get(unratedURL)
+    time.sleep(5)   # Give website time to load data
 
     soup = bs4(driver.page_source, 'html.parser')
     results = soup.find(id="app")
@@ -105,7 +109,7 @@ def getFiveUnrated(valTag):
     options.headless = True
     driver = webdriver.Chrome(options=options, executable_path=os.path.abspath("parse/chromedriver.exe"))
     # Only use when running this file
-    # driver = webdriver.Chrome(os.path.abspath("chromedriver"))
+    # driver = webdriver.Chrome(os.path.abspath("chromedriver.exe"))
     driver.get(URL)
     time.sleep(1)  # Give website time to load data
 
@@ -114,9 +118,9 @@ def getFiveUnrated(valTag):
 
     result = []
     recentFive = results.find_all('span', class_='timeline-match__score')
-    for matches in recentFive[:5]:
-        f_score = matches.find('span', class_='timeline-match__score--winner').text
-        s_score = matches.find('span', class_='timeline-match__score--loser').text
+    for match in recentFive[:5]:
+        f_score = match.find('span', class_='timeline-match__score--winner').text
+        s_score = match.find('span', class_='timeline-match__score--loser').text
 
         if f_score > s_score:
             status = "W "
