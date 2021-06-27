@@ -131,8 +131,9 @@ class command(commands.Cog):
             embed.set_footer(text="All stats calculated from Unrated matches")
             await ctx.send(embed=embed)
 
+
     @commands.command(aliases=['cf'])
-    async def compfriends(self, ctx, discordUser: discord.Member=None):
+    async def compfriends(self, ctx, discordUser: discord.Member = None):
         """ Displays list of most played with people """
         discordUser = discordUser or ctx.author
         valTag = user.getValTag(str(discordUser.id))
@@ -149,8 +150,9 @@ class command(commands.Cog):
             embed.set_footer(text="All stats calculated from Competitive matches")
             await ctx.send(embed=embed)
 
-    @commands.command(aliases=['r5'])
-    async def recentFive(self, ctx, discordUser: discord.Member=None):
+
+    @commands.command(aliases=['r5u'])
+    async def recent5u(self, ctx, discordUser: discord.Member=None):
         """ Displays last five games win streak """
         discordUser = discordUser or ctx.author
         valTag = user.getValTag(str(discordUser.id))
@@ -160,8 +162,23 @@ class command(commands.Cog):
             result = overview.getFiveUnrated(valTag)
             embed = discord.Embed(description="Win Streak")
             embed.set_author(name=discordUser, icon_url=discordUser.avatar_url)
-            embed.add_field(name="Last 5:", value=result)
+            embed.add_field(name="Last 5:", value=str(result))
             embed.set_footer(text="All stats calculated from Unrated matches")
+            await ctx.send(embed=embed)
+
+    @commands.command(aliases=['r5c'])
+    async def recent5c(self, ctx, discordUser: discord.Member=None):
+        """ Displays last five games win streak """
+        discordUser = discordUser or ctx.author
+        valTag = user.getValTag(str(discordUser.id))
+        if valTag is None:
+            await ctx.send("User is not registered yet!")
+        else:
+            result = overview.getFiveCompetitve(valTag)
+            embed = discord.Embed(description="Win Streak")
+            embed.set_author(name=discordUser, icon_url=discordUser.avatar_url)
+            embed.add_field(name="Last 5:", value=str(result))
+            embed.set_footer(text="All stats calculated from Competitive matches")
             await ctx.send(embed=embed)
 
 def setup(bot):

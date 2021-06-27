@@ -134,5 +134,37 @@ def getFiveUnrated(valTag):
     fiveH = "".join(result)
     return fiveH
 
+def getFiveCompetitve(valTag):
+    URL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/overview?playlist=competitive"
+    page = requests.get(URL, headers=headers)
+    options = Options()
+    options.headless = True
+    driver = webdriver.Chrome(options=options, executable_path=os.path.abspath("parse/chromedriver.exe"))
+    # Only use when running this file
+    # driver = webdriver.Chrome(os.path.abspath("chromedriver"))
+    driver.get(URL)
+    time.sleep(1)  # Give website time to load data
+
+    soup = bs4(driver.page_source, 'html.parser')
+    results = soup.find(id="app")
+
+    result = []
+    recentFive = results.find_all('span', class_='timeline-match__score')
+    for matches in recentFive[:5]:
+        f_score = matches.find('span', class_='timeline-match__score--winner').text
+        s_score = matches.find('span', class_='timeline-match__score--loser').text
+
+        if f_score > s_score:
+            status = "W "
+        elif f_score == s_score:
+            status = "D "
+        else:
+            status = "L "
+
+        result.append(status)
+
+    fiveH = "".join(result)
+    return fiveH
+
 if __name__ == "__main__":
-    getFiveUnrated("darryl%237534")
+    print(getFiveCompetitve("darryl%237534"))
