@@ -132,7 +132,7 @@ class command(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command(aliases=['r5u'])
-    async def recentFive(self, ctx, discordUser: discord.Member=None):
+    async def recentFiveUnrated(self, ctx, discordUser: discord.Member=None):
         """ Displays last five games win streak """
         discordUser = discordUser or ctx.author
         valTag = user.getValTag(str(discordUser.id))
@@ -147,14 +147,14 @@ class command(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command(aliases=['r5c'])
-    async def recentFive(self, ctx, discordUser: discord.Member=None):
+    async def recentFiveCompetitive(self, ctx, discordUser: discord.Member=None):
         """ Displays last five games win streak """
         discordUser = discordUser or ctx.author
         valTag = user.getValTag(str(discordUser.id))
         if valTag is None:
             await ctx.send("User is not registered yet!")
         else:
-            result = overview.getFiveUnrated(valTag)
+            result = overview.getFiveCompetitve(valTag)
             embed = discord.Embed(description="Win Streak")
             embed.set_author(name=discordUser, icon_url=discordUser.avatar_url)
             embed.add_field(name="Last 5:", value=str(result))
