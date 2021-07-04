@@ -1,6 +1,9 @@
 import os
 import requests
 import time
+import timeit
+import lxml
+import cchardet
 from bs4 import BeautifulSoup as bs4
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -74,6 +77,7 @@ def getRank(valTag):
 def getTeammates(valTag, isComp=False):
     unratedURL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/matches?playlist=unrated"
     compURL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/matches?playlist=competitive"
+    starttime = timeit.default_timer()
     options = Options()
     options.headless = True
     driver = webdriver.Chrome(options=options, executable_path=os.path.abspath("parse/chromedriver.exe"))
@@ -85,7 +89,7 @@ def getTeammates(valTag, isComp=False):
         driver.get(unratedURL)
     time.sleep(5)   # Give website time to load data
 
-    soup = bs4(driver.page_source, 'html.parser')
+    soup = bs4(driver.page_source, 'lxml')
     results = soup.find(id="app")
 
     friends = results.find_all('div', class_='acquaintances__list-player')
@@ -100,7 +104,8 @@ def getTeammates(valTag, isComp=False):
         winrate = winrateDiv.find_all('div')[1].text
         result.append([name, matches, winrate])
 
-    return result
+    endtime = timeit.default_timer()
+    return result, round(endtime-starttime, 3)
 
 def getFiveUnrated(valTag):
     URL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/overview?playlist=unrated"
@@ -119,8 +124,8 @@ def getFiveUnrated(valTag):
     result = []
     recentFive = results.find_all('span', class_='timeline-match__score')
     for match in recentFive[:5]:
-        f_score = match.find('span', class_='timeline-match__score--winner').text
-        s_score = match.find('span', class_='timeline-match__score--loser').text
+        f_score = int(match.find('span', class_='timeline-match__score--winner').text.strip())
+        s_score = int(match.find('span', class_='timeline-match__score--loser').text.strip())
 
         if f_score > s_score:
             status = "W "
@@ -151,8 +156,8 @@ def getFiveCompetitve(valTag):
     result = []
     recentFive = results.find_all('span', class_='timeline-match__score')
     for matches in recentFive[:5]:
-        f_score = matches.find('span', class_='timeline-match__score--winner').text
-        s_score = matches.find('span', class_='timeline-match__score--loser').text
+        f_score = int(matches.find('span', class_='timeline-match__score--winner').text.strip())
+        s_score = int(matches.find('span', class_='timeline-match__score--loser').text.strip())
 
         if f_score > s_score:
             status = "W "
@@ -166,5 +171,26 @@ def getFiveCompetitve(valTag):
     fiveH = "".join(result)
     return fiveH
 
+
+def bestMaps(valTag):
+    URL = "https://tracker.gg/valorant/profile/riot/" + valTag + "/maps?playlist=unrated"
+    page = requests.get(URL, headers=headers)
+
+    soup = bs4(page.content, 'html.parser')
+    results = soup.find(id="app")
+
+    mapData = []
+    maps = results.find_all('div', class_='map-stats card header-bordered responsive')
+    for map in maps:
+        mapName = map.find('h2').text
+        count = map.find('div', class_='map-stats__header-description').text
+        count = count.split(' ', 1)[0]
+        winRateDiv = map.find('div', class_='numbers')
+        winRate = winRateDiv.find('span', class_='value').text
+        mapData.append([mapName, count, winRate])
+
+    return mapData
+
+
 if __name__ == "__main__":
-    print(getFiveCompetitve("darryl%237534"))
+    bestMaps("darryl%237534")
